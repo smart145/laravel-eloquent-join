@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         php_version: [8.0, 8.1]
-        laravel_version: [9.0]
+        laravel_version: [9.*]
 
     steps:
       - name: Checkout commit
@@ -29,8 +29,16 @@ jobs:
       - name: Run composer install
         run: composer install --no-interaction --no-suggest
 
+      - name: Run find-and-replace to replace * with 0
+        uses: mad9000/actions-find-and-replace-string@1
+        id: laravel_version_cleaned
+        with:
+          source: ${{ matrix.laravel_version }}
+          find: '*'
+          replace: '0'
+
       - name: Install Laravel
-        run: composer update --no-interaction illuminate/database:^${{ matrix.laravel_version }}
+        run: composer update --no-interaction illuminate/database:^${{ steps.laravel_version_cleaned.outputs.value }}
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
