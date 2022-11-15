@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         php_version: [8.0, 8.1]
-        laravel_version: [9.*]
+        laravel_version: [9.0]
 
     steps:
       - name: Checkout commit
